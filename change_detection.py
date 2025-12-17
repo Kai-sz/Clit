@@ -3,19 +3,38 @@ import hashlib
 import time
 
 def main():
-    print("")
     # Usage
-    detect_file_changes("example.txt", lambda: print("file changed"))
+    watch_file_changes(".",
+            lambda path: print("mudou",path),
+            lambda path: print("criou",path))
 
-
-def detect_file_changes(file_path, callback, rest=1):
-    last_hash = calculate_file_hash(file_path)
+def watch_file_changes(root, change_callback, create_callback, rest = 1):
     while True:
-        current_hash = calculate_file_hash(file_path)
-        if current_hash != last_hash:
-            callback()
-            last_hash = current_hash
+        check_file_changes(root, change_callback, create_callback)
         time.sleep(rest)
+
+
+#dir_watch
+hashes = {}
+def check_file_changes(root, change_callback, create_callback):
+    for node in os.listdir(root):
+        path = root + "/" + node
+        is_directory = os.path.isdir(path)
+        if is_directory:
+            hashes[path] = "0"
+            check_file_changes(path, change_callback, create_callback)
+            continue
+
+        file_was_created = not hashes.get(path)
+        if file_was_created:
+            hashes[path] = calculate_file_hash(path)
+            create_callback(path)
+            continue
+
+        file_was_changed = hashes[path] != calculate_file_hash(path)
+        if file_was_changed:
+            hashes[path] = calculate_file_hash(path)
+            change_callback(path)
 
 
 def calculate_file_hash(file_path):
