@@ -9,12 +9,14 @@ def main():
             lambda path: print("criou",path))
 
 def watch_file_changes(root, change_callback, create_callback, rest = 1):
+    # dry running check_file_changes ensures we have a map 
+    # of how the file system looks on initiation
+    check_file_changes(root, lamda x: x, lamda x: x)
     while True:
         check_file_changes(root, change_callback, create_callback)
         time.sleep(rest)
 
 
-#dir_watch
 hashes = {}
 def check_file_changes(root, change_callback, create_callback):
     for node in os.listdir(root):
