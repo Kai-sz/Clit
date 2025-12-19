@@ -23,13 +23,10 @@ def watch_file_changes(root, change_callback, create_callback, delete_callback, 
 
 hashes = {}
 def check_for_delition(callback):
-    deleted = []
-    for path in hashes:
+    for path in hashes.copy():
         if not os.path.exists(path):
             callback(path)
-            deleted.append(path)
-    for path in deleted:
-        del hashes[path]
+            del hashes[path]
 
 def check_file_changes(root, change_callback, create_callback):
     for node in os.listdir(root):
