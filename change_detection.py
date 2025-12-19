@@ -9,9 +9,10 @@ def main():
             lambda path: print("criou",path))
 
 def watch_file_changes(root, change_callback, create_callback, rest = 1):
-    # dry running check_file_changes ensures we have a map 
+    check_file_changes(root, lambda x: x, lambda x: x)
+    # dry running check_file_changes ensures we have a map
     # of how the file system looks on initiation
-    check_file_changes(root, lamda x: x, lamda x: x)
+    # if we do not run this we will emit creation events for every file
     while True:
         check_file_changes(root, change_callback, create_callback)
         time.sleep(rest)
