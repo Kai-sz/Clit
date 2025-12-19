@@ -5,9 +5,10 @@ import time
 def main():
     # Usage
     watch_file_changes(".",
-            lambda path: print("mudou",path),
-            lambda path: print("criou",path),
-            lambda path: print("deletou",path))
+        lambda path: print("mudou",path),
+        lambda path: print("criou",path),
+        lambda path: print("deletou",path)
+    )
 
 def watch_file_changes(root, change_callback, create_callback, delete_callback, rest = 1):
     check_file_changes(root, lambda x: x, lambda x: x)
