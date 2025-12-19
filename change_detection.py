@@ -6,19 +6,30 @@ def main():
     # Usage
     watch_file_changes(".",
             lambda path: print("mudou",path),
-            lambda path: print("criou",path))
+            lambda path: print("criou",path),
+            lambda path: print("deletou",path))
 
-def watch_file_changes(root, change_callback, create_callback, rest = 1):
+def watch_file_changes(root, change_callback, create_callback, delete_callback, rest = 1):
     check_file_changes(root, lambda x: x, lambda x: x)
     # dry running check_file_changes ensures we have a map
     # of how the file system looks on initiation
     # if we do not run this we will emit creation events for every file
     while True:
         check_file_changes(root, change_callback, create_callback)
+        check_for_delition(delete_callback)
         time.sleep(rest)
 
 
 hashes = {}
+def check_for_delition(callback):
+    deleted = []
+    for path in hashes:
+        if not os.path.exists(path):
+            callback(path)
+            deleted.append(path)
+    for path in deleted:
+        del hashes[path]
+
 def check_file_changes(root, change_callback, create_callback):
     for node in os.listdir(root):
         path = root + "/" + node
