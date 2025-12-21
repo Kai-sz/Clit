@@ -5,10 +5,19 @@ import subprocess
 def main():
     clit_init()
     watch_file_changes(".",
-        gen_delta,
-        add_to_mirror,
-        lambda path: print("deletou",path)
+        handle_update,
+        handle_create,
+        handle_delete
     )
+
+def handle_update(path):
+    gen_delta(path)
+
+def handle_create(path):
+    add_to_mirror(path)
+
+def handle_delete(path):
+    print("deletou", path)
 
 def gen_delta(path):
     mirror_path = get_mirror_path(path)
