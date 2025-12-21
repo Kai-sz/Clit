@@ -10,6 +10,13 @@ def main():
         handle_delete
     )
 
+def clit_init():
+    if not os.path.exists(".clit"):
+        os.mkdir(".clit")
+    if not os.path.exists(".clit/mirror"):
+        os.mkdir(".clit/mirror")
+
+
 def handle_update(path):
     gen_delta(path)
 
@@ -32,12 +39,6 @@ def get_mirror_path(path):
     return mirror_path
 
 
-def clit_init():
-    if not os.path.exists(".clit"):
-        os.mkdir(".clit")
-    if not os.path.exists(".clit/mirror"):
-        os.mkdir(".clit/mirror")
-
 def calculate_delta(file1, file2):
     command = f"diff {file1} {file2}"
     delta = subprocess.run(
@@ -47,6 +48,7 @@ def calculate_delta(file1, file2):
         text=True
     ).stdout
     return delta
+
 
 def add_to_mirror(path):
     mirror_path = get_mirror_path(path)
