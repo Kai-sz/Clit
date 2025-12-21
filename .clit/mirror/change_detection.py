@@ -23,10 +23,8 @@ def watch_file_changes(root, change_callback, create_callback, delete_callback, 
 def dry_run(root=".clit/mirror"):
     for node in os.listdir(root):
         path = root + "/" + node
-
         write_point = path.replace(".clit/mirror", ".")
-        hashes[write_point] = calculate_file_hash(path)
-
+        hashes[path] = calculate_file_hash(path)
         is_directory = os.path.isdir(path)
         if is_directory:
             dry_run(path)
@@ -47,6 +45,8 @@ def check_file_changes(root, change_callback, create_callback):
         was_created = not hashes.get(path)
 
         if was_created:
+            print(path)
+            print(hashes)
             hashes[path] = calculate_file_hash(path)
             create_callback(path)
 
