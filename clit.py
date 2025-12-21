@@ -29,7 +29,9 @@ def handle_delete(path):
 def gen_delta(path):
     mirror_path = get_mirror_path(path)
     delta = calculate_delta(path, mirror_path)
-    print(delta)
+    delta_id = hash_object(delta)
+    print("mudou", path)
+    print(delta_id)
     return delta
 
 
@@ -49,6 +51,15 @@ def calculate_delta(file1, file2):
     ).stdout
     return delta
 
+def hash_object(content):
+    command = "git hash-object -w --stdin"
+    hash_id = subprocess.run(
+        command,
+        input=content.encode("utf-8"),
+        capture_output=True,
+        shell=True,
+    ).stdout
+    return hash_id
 
 def add_to_mirror(path):
     mirror_path = get_mirror_path(path)
